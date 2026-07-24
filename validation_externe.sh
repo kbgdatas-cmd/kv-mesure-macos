@@ -191,7 +191,9 @@ else
   note "  Un interpréteur 3.12 est installé dans le répertoire de travail."
   export MAMBA_ROOT_PREFIX="$WORK/.mamba"
   get_micromamba || abandon "Téléchargement de micromamba impossible ($MAMBA_PLAT)."
-  "$WORK/bin/micromamba" create -y -p "$WORK/py312" python=3.12 pip -c conda-forge >/dev/null 2>&1 || \
+  OMPPKG=""
+  [ "$SYS" = "Darwin" ] && OMPPKG="llvm-openmp"
+  "$WORK/bin/micromamba" create -y -p "$WORK/py312" python=3.12 pip $OMPPKG -c conda-forge >/dev/null 2>&1 || \
     abandon "Création de l'interpréteur 3.12 impossible."
   PY1="$WORK/py312/bin/python"
   PIP1="$WORK/py312/bin/pip"
