@@ -33,3 +33,6 @@ jobs:
       - name: Rapport produit
         if: always()
         run: cat "$HOME/kairos_verification/ATTESTATION_DATA.txt" || echo "(aucun rapport)"
+      - name: Journal du verificateur
+        if: always()
+        run: cat "$HOME/kairos_verification/ladder.txt" || echo "(aucun journal)"
