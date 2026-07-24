@@ -63,8 +63,8 @@ avx512() {
     [ "$v" = "1" ] && echo oui || echo non
   fi
 }
-pyver_ok() { # 0 si python3 >= 3.10
-  python3 -c 'import sys; sys.exit(0 if sys.version_info[:2] >= (3,10) else 1)' 2>/dev/null
+pyver_ok() { # 0 si python3 est dans l'enveloppe mesuree 3.10 a 3.12
+  python3 -c 'import sys; v=sys.version_info[:2]; sys.exit(0 if (3,10) <= v <= (3,12) else 1)' 2>/dev/null
 }
 get_micromamba() {
   [ -x "$WORK/bin/micromamba" ] && return 0
@@ -186,8 +186,8 @@ if pyver_ok; then
   PIP1="$WORK/KV/env/bin/pip"
   VOIE1="venv sur python3 du système"
 else
-  note "  python3 du système : $(python3 --version 2>&1) — antérieur à 3.10"
-  note "  Les bibliothèques déclarées exigent Python 3.10 ou supérieur."
+  note "  python3 du système : $(python3 --version 2>&1) — hors enveloppe 3.10 à 3.12"
+  note "  Les mesures publiées portent sur Python 3.10 à 3.12."
   note "  Un interpréteur 3.12 est installé dans le répertoire de travail."
   export MAMBA_ROOT_PREFIX="$WORK/.mamba"
   get_micromamba || abandon "Téléchargement de micromamba impossible ($MAMBA_PLAT)."
