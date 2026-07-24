@@ -1,0 +1,35 @@
+name: mesure-macos
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+jobs:
+  mesure:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-14
+            libelle: "macOS Apple Silicon (arm64)"
+          - runner: macos-13
+            libelle: "macOS Intel (x86_64)"
+    name: ${{ matrix.libelle }}
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Description de la machine
+        run: |
+          echo "runner     : ${{ matrix.runner }}"
+          echo "uname      : $(uname -s) $(uname -m)"
+          echo "processeur : $(sysctl -n machdep.cpu.brand_string 2>/dev/null || echo '-')"
+          echo "macOS      : $(sw_vers -productVersion 2>/dev/null || echo '-')"
+          echo "python3    : $(python3 --version 2>&1)"
+      - name: Empreinte de l outil
+        run: |
+          shasum -a 256 validation_externe.sh
+          echo "attendu : aa26002c0a2cbe715140435a164a08fd4f69376b6faa10b9f63b1418e0e11d57"
+      - name: Execution du protocole
+        run: bash validation_externe.sh < /dev/null
+      - name: Rapport produit
+        if: always()
+        run: cat "$HOME/kairos_verification/ATTESTATION_DATA.txt" || echo "(aucun rapport)"
