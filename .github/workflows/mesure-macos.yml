@@ -13,6 +13,8 @@ jobs:
             libelle: "macOS Apple Silicon (arm64)"
           - runner: macos-13
             libelle: "macOS Intel (x86_64)"
+          - runner: macos-14-xlarge
+            libelle: "macOS Apple Silicon M2 Pro (arm64)"
     name: ${{ matrix.libelle }}
     runs-on: ${{ matrix.runner }}
     steps:
